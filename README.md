@@ -10,9 +10,9 @@ A desktop graphical user interface for **Cooking Ina**, built using Python and [
 ##  Getting Started
 
 ### 1. Clone the Repository
-```bash
 git clone [https://github.com/bmdmatrimonio/Cooking_Ina_Project.git](https://github.com/bmdmatrimonio/Cooking_Ina_Project.git)
-cd YOUR_REPOSITORY
+```bash
+cd Cooking_Ina_Project
 ```
 ### 2. Intall Dependencies
 ```bash
