@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from timer_audio import CookingTimer
 
 class CookingInaGUI:
     def __init__(self, root):
@@ -19,7 +20,12 @@ class CookingInaGUI:
         self.accent_green = "#4CAF50"     # Green for advancing to the next step
         
         self.root.configure(fg_color=self.bg_color)
+
+        # Initialize Backend Timer (30 minutes = 1800 seconds)
+        self.timer = CookingTimer(initial_seconds=5)
+
         self.setup_ui()
+        self.update_timer_display()
         
     def setup_ui(self):
         # Main Container Frame
@@ -80,21 +86,38 @@ class CookingInaGUI:
                                       width=130, height=34, command=self.on_next_step)
         self.next_btn.grid(row=0, column=1, padx=10)
 
-    # Backend Hooks (To be edited by backend group)
+    def update_timer_display(self):
+        """Fetches the formatted string from the timer module and updates the label."""
+        self.timer_label.configure(text=self.timer.get_time_formatted())
+
+    def tick(self):
+        """The GUI loop that asks the timer to count down."""
+        if self.timer.is_running:
+            self.timer.decrement()
+            self.update_timer_display()
+            
+            # Continue the loop every 1000ms if still running
+            if self.timer.is_running:
+                self.root.after(1000, self.tick)
+
     def on_start(self):
-        print("Backend hook: Start timer")
-
+            # Only start the UI tick loop if the timer successfully started
+            if not self.timer.is_running and self.timer.start():
+                self.tick()
+    
     def on_pause(self):
-        print("Backend hook: Pause timer")
-
+        self.timer.pause()
+    
     def on_extend(self):
-        print("Backend hook: Extend timer by 60 seconds")
-        
+        self.timer.extend(60)
+        self.update_timer_display()
+    
     def on_repeat(self):
-        print("Backend hook: Reset current step timer")
-
+        self.timer.reset(1800)
+        self.update_timer_display()
+    
     def on_next_step(self):
-        print("Backend hook: Load next step / Check if last step")
+        print("Backend hook: Load next step logic here")
 
 if __name__ == "__main__":
     # Initialize the window
