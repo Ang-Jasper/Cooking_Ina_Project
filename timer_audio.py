@@ -57,14 +57,31 @@ class CookingTimer:
         return f"{mins:02d}:{secs:02d}"
 
     def play_alarm(self):
-        """Loads and plays the audio file."""
+        """Loads and plays the audio file by dynamically scanning for the file."""
+        base_dir = os.path.dirname(self.alarm_file)
+        target_file = None
+
         try:
-            pygame.mixer.music.load(self.alarm_file)
+            if os.path.exists(base_dir):
+                for file_name in os.listdir(base_dir):
+                    # Check if the file starts with 'Bell' (ignoring extensions)
+                    if file_name.lower().startswith("bell"):
+                        target_file = os.path.join(base_dir, file_name)
+                        break
+        except Exception:
+            pass
+
+        if not target_file:
+            target_file = self.alarm_file
+
+        try:
+            pygame.mixer.music.load(target_file)
             pygame.mixer.music.play() 
-        except pygame.error:
-            print(f"Audio file not found! Make sure '{self.alarm_file}' exists.")
+            pygame.event.pump()
+        except pygame.error as e:
+            print(f"Pygame audio error: {e}")
+            print(f"Attempted to load calculated path: '{target_file}'")
 
     def stop_alarm(self):
         """Stops the audio playback."""
         pygame.mixer.music.stop()
-
