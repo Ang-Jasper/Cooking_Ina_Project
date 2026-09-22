@@ -24,7 +24,7 @@ class CookingInaGUI:
         self.root.configure(fg_color=self.bg_color)
 
         project_dir = os.path.dirname(os.path.abspath(__file__))
-        audio_path = os.path.join(project_dir, "bell.mp4")
+        audio_path = os.path.join(project_dir, "bell")
 
         # Initialize Backend Timer (30 minutes = 1800 seconds)
         self.timer = CookingTimer(initial_seconds=5, alarm_filename=audio_path)
